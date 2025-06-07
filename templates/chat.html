@@ -480,7 +480,7 @@
     if (isTyping) {
       messageDiv.innerHTML = `
         <div class="message-header">
-          <div class="bot-avatar">M</div>
+          <div class="bot-avatar"><img src="{{ url_for('static', filename='logo-medbot.png') }}" alt="Bot Logo" class="logo" /></div>
           <span>AskMedi</span>
         </div>
         <div class="typing-indicator">
@@ -492,7 +492,7 @@
     } else {
       const avatar = sender === 'user' ? 
         '<div class="user-avatar">Y</div>' : 
-        '<div class="bot-avatar">M</div>';
+        '<div class="bot-avatar"><img src="{{ url_for('static', filename='logo-medbot.png') }}" alt="Bot Logo" class="logo" /></div>';
       
       const name = sender === 'user' ? 'You' : 'AskMedi';
       

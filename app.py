@@ -42,9 +42,10 @@ retriever = docsearch.as_retriever(search_type="similarity", search_kwargs={"k":
 # Initialize LLM and chain
 llm = OpenRouterLLM()
 
+# Updated prompt template to include chat history
 prompt = ChatPromptTemplate.from_messages(
     [
-        ("system", system_prompt),
+        ("system", system_prompt + "\n\nPrevious conversation context:\n{chat_history}"),
         ("human", "{input}"),
     ]
 )
@@ -78,28 +79,52 @@ def chat():
     if 'chat_history' not in session:
         session['chat_history'] = []
 
-    # Save user message
-    session['chat_history'].append({"role": "user", "content": msg})
-
-    # Optional: limit session memory to last 10 messages
-    MAX_HISTORY = 10
-    if len(session['chat_history']) > MAX_HISTORY:
-        session['chat_history'] = session['chat_history'][-MAX_HISTORY:]
-
-    # Build context from history
-    conversation = ""
+    # Build formatted chat history (excluding current message)
+    chat_history_formatted = ""
     for entry in session['chat_history']:
-        prefix = "User: " if entry["role"] == "user" else "Bot: "
-        conversation += prefix + entry["content"] + "\n"
+        if entry["role"] == "user":
+            chat_history_formatted += f"User: {entry['content']}\n"
+        else:
+            chat_history_formatted += f"Assistant: {entry['content']}\n"
+
+    # Create contextual query for retrieval
+    # If message contains pronouns/references, include recent context
+    contextual_keywords = ["it", "that", "this", "them", "they", "more about", "tell me more", "explain", "detail"]
+    needs_context = any(keyword in msg.lower() for keyword in contextual_keywords)
+    
+    if needs_context and session['chat_history']:
+        # Get last few exchanges for context
+        recent_context = ""
+        last_exchanges = session['chat_history'][-4:]  # Last 2 exchanges
+        for entry in last_exchanges:
+            if entry["role"] == "user":
+                recent_context += f"Previous question: {entry['content']} "
+            else:
+                recent_context += f"Previous answer: {entry['content'][:100]}... "
+        
+        # Combine recent context with current message for better retrieval
+        retrieval_query = f"{recent_context} Current question: {msg}"
+    else:
+        retrieval_query = msg
 
     try:
-        # Get response from RAG chain
-        response = rag_chain.invoke({"input": conversation})
+        # Get response from RAG chain with contextual query
+        response = rag_chain.invoke({
+            "input": retrieval_query,  # Enhanced query for better retrieval
+            "chat_history": chat_history_formatted  # Previous conversation context
+        })
         answer = response.get("answer", "Sorry, no answer was returned.")
 
-        # Save bot response
+        # Add current user message and bot response to session history
+        session['chat_history'].append({"role": "user", "content": msg})
         session['chat_history'].append({"role": "assistant", "content": answer})
 
+        # Optional: limit session memory to last 20 messages (10 exchanges)
+        MAX_HISTORY = 20
+        if len(session['chat_history']) > MAX_HISTORY:
+            session['chat_history'] = session['chat_history'][-MAX_HISTORY:]
+
+        # Save to persistent storage
         save_message("user", msg, is_bot=False)
         save_message("bot", answer, is_bot=True)
 
