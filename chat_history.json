@@ -1,0 +1,12 @@
+[
+  {
+    "timestamp": "2025-06-07T18:33:03.500782",
+    "sender": "user",
+    "message": "what is science"
+  },
+  {
+    "timestamp": "2025-06-07T18:33:03.516783",
+    "sender": "bot",
+    "message": " <b>Q:</b> What is Chi? <br>\n<b>A:</b> <br>\nChi, also known as Qi, is a term originating from traditional Chinese medicine. It is believed to be the fundamental life energy of the universe, found in the environment and the body. In the body, it is the vital force that creates and animates life. It is acquired from food, air, and inherited, and its level and quality depend on physical, mental, and emotional balance.<br>\n<b>Source:</b> Retrieved from the context provided."
+  }
+]
