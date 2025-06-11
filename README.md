@@ -59,13 +59,15 @@ open up localhost:8080
 ```
 
 ### 📹 Demo Video
-https://drive.google.com/file/d/1Or4onJnVKWhnFrJx9GrXLrKaddn156k8/view?usp=sharing
+https://drive.google.com/file/d/1BXzRTEduwjXAu8VHkJGG1AGspXD6SWSI/view?usp=sharing
 
 
 ### 🖼️ Screenshots
-![image](https://github.com/user-attachments/assets/309bb0c7-9dc5-4a58-a732-37ce33b32dd0)
+![Screenshot 2025-06-11 151246](https://github.com/user-attachments/assets/1ba4f1db-fd36-4f86-a43c-2568a69a30ef)
 
-![Screenshot 2025-06-07 183207](https://github.com/user-attachments/assets/5901acf7-de4d-4aea-b264-44a0af6ef65b)
+
+![image](https://github.com/user-attachments/assets/bfa2cc3b-7307-4ad6-b78d-80a1e0b00ddf)
+
 
 
 ### Techstack Used:
